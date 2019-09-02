@@ -12,12 +12,6 @@ const routes = require('./routes')
 //   }
 //   await next();
 // }
-// let db = [{db: 'db'}]
-
-// usersRouter.post('/', (ctx) => {
-//   ctx.body = ctx.request.body
-//   // ctx.set('Allow', 'GET, POST')
-// })
 
 // app.use(async(ctx, next) => {
 //   console.log(ctx.url);
@@ -36,9 +30,6 @@ const routes = require('./routes')
 // app.use(() => {
 //   console.log(5);
 // })
-routes(app)
-app.use(router.routes());
 app.use(bodyparser());
-app.use(usersRouter.routes());
-app.use(usersRouter.allowedMethods());
+routes(app)
 app.listen(3000);

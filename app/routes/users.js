@@ -18,7 +18,7 @@ router.delete('/:id', (ctx) => {
 })
 
 router.put('/:id', (ctx) => {
-  usersCtl.modifyUser(ctx)
+  usersCtl.updateUser(ctx)
 })
 
 router.get('/:id', (ctx) => {
