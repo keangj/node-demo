@@ -4,6 +4,16 @@ class UsersCtl {
     ctx.body = db;
   }
   createUser (ctx) {
+    ctx.verifyParams({
+      name: {
+        type: 'string',
+        required: true
+      },
+      age: {
+        type: 'number',
+        required: false
+      }
+    })
     const data = ctx.request.body
     db.push(data)
     ctx.body = data
