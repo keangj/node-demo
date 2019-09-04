@@ -7,7 +7,8 @@ const mongoose = require('mongoose')
 const app = new Koa();
 const { connectionStr } = require('./config')
 
-mongoose.connect(connectionStr, { useNewUrlParser: true })
+mongoose.connect(connectionStr, { useNewUrlParser: true }, () => console.log('MongoDB 连接成功'))
+
 app.use(bodyparser());
 app.use(parameter(app))
 app.use(error({

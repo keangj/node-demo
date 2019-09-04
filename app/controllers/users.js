@@ -1,37 +1,52 @@
-let db = [{db: 'db'}]
+const User = require('../models/users')
+
 class UsersCtl {
-  getUsers (ctx) {
-    ctx.body = db;
+  async getUsers (ctx) {
+    const users = await User.find();
+    ctx.body = users
   }
-  createUser (ctx) {
+  async getUser (ctx) {
+    const { id } = ctx.params
+    const user = await User.findById(id)
+    if (!user) {
+      ctx.throw(404, '用户不存在')
+    }
+    ctx.body = user
+  }
+  async createUser (ctx) {
     ctx.verifyParams({
       name: {
         type: 'string',
         required: true
-      },
-      age: {
-        type: 'number',
-        required: false
       }
     })
-    const data = ctx.request.body
-    db.push(data)
-    ctx.body = data
+    const user = await new User(ctx.request.body).save()
+    ctx.body = user
   }
-  deleteUser (ctx) {
+  async deleteUser (ctx) {
     const { id } = ctx.params
-    db = db.filter((item, index) => {
-      console.log(index, id);
-      return index + 1 !== parseInt(id)
-    })
+    const user = await User.findByIdAndRemove(id)
+    if (!user) {
+      ctx.throw(404, '用户不存在')
+    }
     ctx.status = 204;
-    ctx.body = db
+    // ctx.body = 
   }
-  updateUser (ctx) {
+  async updateUser (ctx) {
+    ctx.verifyParams({
+      name: {
+        type: 'string',
+        required: true
+      }
+    })
     const { id } = ctx.params
-    console.log(id);
-    db[id-1] = ctx.request.body
-    ctx.body = ctx.request.body
+    const { body } = ctx.request
+    console.log(id, body);
+    const user = await User.findByIdAndUpdate(id, body)
+    if (!user) {
+      ctx.throw(404, '用户不存在')
+    }
+    ctx.body = body
   }
 }
 
