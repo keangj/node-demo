@@ -3,8 +3,17 @@ const User = require('../models/users')
 const { secret } = require('../config')
 
 class UsersCtl {
+  async checkOwner (ctx, next) {
+    console.log('id ' + ctx.params, 'user ' + ctx.state.user);
+    const { id } = ctx.params
+    const { _id } = ctx.state.user
+    if (id !== _id) { ctx.throw(403, '没有权限') }
+    await next()
+  }
+
   async getUsers (ctx) {
     const users = await User.find();
+    console.log(users);
     ctx.body = users
   }
 
@@ -36,7 +45,6 @@ class UsersCtl {
       ctx.throw(404, '用户不存在')
     }
     ctx.status = 204;
-    // ctx.body = 
   }
 
   async updateUser (ctx) {
