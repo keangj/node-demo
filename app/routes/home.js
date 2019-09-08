@@ -1,9 +1,9 @@
 const Router = require('koa-router')
 const router = new Router()
-const homeCtl = require('../controllers/home')
+const { home, upload } = require('../controllers/home')
 
-router.get('/', (ctx) => {
-  homeCtl.home(ctx)
-})
+router.get('/', home)
+
+router.post('/upload', upload)
 
 module.exports = router

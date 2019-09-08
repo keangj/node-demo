@@ -1,6 +1,11 @@
 class HomeCtl {
-  home(ctx) {
+  home (ctx) {
     ctx.body = 'home';
+  }
+
+  upload (ctx) {
+    const file = ctx.request.files.file
+    ctx.body = { path: file.path }
   }
 }
 
