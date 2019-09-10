@@ -50,7 +50,14 @@ class UsersCtl {
   async updateUser (ctx) {
     ctx.verifyParams({
       name: { type: 'string', required: false },
-      password: { type: 'string', required: false }
+      password: { type: 'string', required: false },
+      avatar_url: { type: 'string', required: false },
+      gender: { type: 'string', required: false },
+      headline: { type: 'string', required: false },
+      locations: { type: 'array', itemType: 'string', required: false },
+      business: { type: 'string', required: false },
+      employments: { type: 'array', itemType: 'object', required: false },
+      educations: { type: 'array', itemType: 'object', required: false }
     })
     const { id } = ctx.params
     const { body } = ctx.request
