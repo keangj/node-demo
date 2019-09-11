@@ -19,7 +19,9 @@ class UsersCtl {
 
   async getUser (ctx) {
     const { id } = ctx.params
-    const user = await User.findById(id)
+    const { fields } = ctx.query
+    const fieldsSelect = fields.split(';').filter(f => f).map(f=> '+'+f).join(' ')
+    const user = await User.findById(id).select(fieldsSelect)
     if (!user) {
       ctx.throw(404, '用户不存在')
     }
