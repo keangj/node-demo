@@ -23,6 +23,10 @@ const userSchema = new Schema({
       diploma: { type: Number, enum: [1, 2, 3, 4, 5]}
     }],
     select: false
+  },
+  following: {
+    type: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    select: false
   }
 })
 

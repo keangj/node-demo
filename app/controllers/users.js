@@ -20,7 +20,8 @@ class UsersCtl {
   async getUser (ctx) {
     const { id } = ctx.params
     const { fields } = ctx.query
-    const fieldsSelect = fields.split(';').filter(f => f).map(f=> '+'+f).join(' ')
+    console.log(fields);
+    const fieldsSelect = !fields ? '' : fields.split(';').filter(f => f).map(f=> '+'+f).join(' ')
     const user = await User.findById(id).select(fieldsSelect)
     if (!user) {
       ctx.throw(404, '用户不存在')
@@ -81,6 +82,39 @@ class UsersCtl {
     const { _id, name } = user
     const token = jsonwebtoken.sign({ _id, name }, secret, { expiresIn: '1d' })
     ctx.body = { token }
+  }
+
+  async getFollowingList (ctx) {
+    const { id } = ctx.params
+    const user = await User.findById(id).select('+following').populate('following')
+    ctx.body = user
+  }
+  async getFollowedList (ctx) {
+    const { id } = ctx.params
+    console.log(id);
+    const followed = await User.find({ following: id })
+    console.log(followed);
+    ctx.body = followed
+  }
+  async follow (ctx) {
+    const { id } = ctx.params
+    const curUser = await User.findById(ctx.state.user._id).select('+following')
+    const repeat = curUser.following.map(id => id.toString()).includes(id)
+    if (!repeat) {
+      curUser.following.unshift(id)
+      curUser.save()
+    }
+    ctx.body = curUser
+  }
+  async unfollow (ctx) {
+    const { id } = ctx.params
+    const curUser = await User.findById(ctx.state.user._id).select('+following')
+    const repeat = curUser.following.map(id => id.toString()).includes(id)
+    if (repeat) {
+      curUser.following = curUser.following.filter(item => item === id)
+      curUser.save()
+    }
+    ctx.status = 204
   }
 }
 
