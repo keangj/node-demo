@@ -91,10 +91,13 @@ class UsersCtl {
   }
   async getFollowedList (ctx) {
     const { id } = ctx.params
-    console.log(id);
     const followed = await User.find({ following: id })
-    console.log(followed);
     ctx.body = followed
+  }
+  async checkUserExist (ctx, next) {
+    const user = await User.findById(ctx.params.id)
+    !user && ctx.throw(404, '用户不存在')
+    await next()
   }
   async follow (ctx) {
     const { id } = ctx.params
